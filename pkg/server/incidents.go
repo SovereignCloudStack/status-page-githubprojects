@@ -107,7 +107,9 @@ func (s *ServerImplementation) GetIncidents(ctx echo.Context, params api.GetInci
 	// Map GraphQL output to OpenAPI Spec
 	incidents := []api.Incident{}
 	for itemKey := range query.Node.ProjectV2.Items.Nodes {
-		incidents = append(incidents, query.Node.ProjectV2.Items.Nodes[itemKey].ToIncident(ctx))
+		incident := query.Node.ProjectV2.Items.Nodes[itemKey].ToIncident(ctx)
+		// TODO: Check if times overlap
+		incidents = append(incidents, incident)
 	}
 	return ctx.JSON(200, incidents)
 }

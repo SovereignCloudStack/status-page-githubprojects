@@ -11,8 +11,8 @@ This means that all state relevant to the status page is stored in a [GitHub Pro
 | Incident | Project Items (`PVTI_***`) of type "ISSUE" |
 | Incident.phase | Project Item Field "Status" (Single select, predefined) |
 | Incident.impactType | Project Item Field "Impact Type" (Single select) |
-| Incident.beganAt | Project Item Field "Began At" (Text) |
-| Incident.endedAt | Project Item Field "Ended At" (Text) |
+| Incident.beganAt | Project Item Field "Began At" (Text, RFC3339) |
+| Incident.endedAt | Project Item Field "Ended At" (Text, RFC3339) |
 
 On startup, the server verifies that fields are configured accordingly in GitHub. If this is not the case, it will not start.
 
