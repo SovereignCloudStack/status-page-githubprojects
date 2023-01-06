@@ -16,7 +16,7 @@ This means that all state relevant to the status page is stored in a [GitHub Pro
 
 On startup, the server verifies that fields are configured accordingly in GitHub. If this is not the case, it will not start.
 
-Set `GITHUB_TOKEN` as environment variable with all required permissions (only classic PAT's are supported, as the server uses the GraphQL API), see `--help` for all other parameters.
+Set `GITHUB_TOKEN` as environment variable with all required permissions (if using PAT's, use classic tokens, [as fine grained tokens are not yet supported with GraphQL](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#about-personal-access-tokens)), see `--help` for all other parameters.
 
 Example invocation for debugging:
 
