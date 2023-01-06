@@ -1,7 +1,7 @@
 # SCS Status Page - GitHub Projects Backend
 
 This repository contains an implementation of the [SCS Status Page API](https://github.com/SovereignCloudStack/status-page-openapi) backed by GitHub Projects.
-This means that all state relevant to the status page is stored in a [GitHub Project](https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects).
+This means that all state relevant to the status page is stored in a [GitHub Project](https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects) and fetched via the GitHub GraphQL API.
 
 ## Mapping of attributes
 
