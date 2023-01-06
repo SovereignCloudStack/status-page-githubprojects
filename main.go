@@ -18,7 +18,7 @@ func main() {
 	addr := flag.String("addr", ":3000", "address to listen on")
 	projectOwner := flag.String("github.project.owner", "joshmue", "user owning the project")
 	projectOwnerIsOrg := flag.Bool("github.project.owner.is-org", false, "sets whether the owner of the github project is an org instead of an user")
-	projectNumber := flag.Int64("github.project.number", 1, "project number")
+	projectNumber := flag.Int64("github.project.number", 1, `project number, i. e. the "1" in https://github.com/users/$USER/projects/1`)
 	lastPhase := flag.String("last-phase", "Done", "last phase of incidents")
 	flag.Parse()
 
