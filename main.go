@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"os"
-	"strings"
 
 	"github.com/SovereignCloudStack/status-page-githubprojects/pkg/server"
 	"github.com/SovereignCloudStack/status-page-openapi/pkg/api"
@@ -20,7 +19,6 @@ func main() {
 	projectOwner := flag.String("github.project.owner", "joshmue", "user owning the project")
 	projectOwnerIsOrg := flag.Bool("github.project.owner.is-org", false, "sets whether the owner of the github project is an org instead of an user")
 	projectNumber := flag.Int64("github.project.number", 1, "project number")
-	impactTypeList := flag.String("impacttypes", "performance-degration,connectivity-issues", `","-seperated list of impact types`)
 	lastPhase := flag.String("last-phase", "Done", "last phase of incidents")
 	flag.Parse()
 
@@ -32,7 +30,6 @@ func main() {
 		ProjectOwner:      *projectOwner,
 		ProjectOwnerIsOrg: *projectOwnerIsOrg,
 		ProjectNumber:     *projectNumber,
-		ImpactTypes:       strings.Split(*impactTypeList, ","),
 		LastPhase:         *lastPhase,
 	}
 
