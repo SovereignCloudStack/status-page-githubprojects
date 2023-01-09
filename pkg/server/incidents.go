@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/SovereignCloudStack/status-page-openapi/pkg/api"
+	"github.com/SovereignCloudStack/status-page-githubprojects/pkg/helper"
 	"github.com/labstack/echo/v4"
 	"github.com/shurcooL/githubv4"
 )
@@ -108,8 +109,9 @@ func (s *ServerImplementation) GetIncidents(ctx echo.Context, params api.GetInci
 	incidents := []api.Incident{}
 	for itemKey := range query.Node.ProjectV2.Items.Nodes {
 		incident := query.Node.ProjectV2.Items.Nodes[itemKey].ToIncident(ctx)
-		// TODO: Check if times overlap
-		incidents = append(incidents, incident)
+		if helper.IsWithinTimeRange(&incident, params.Start, params.End) {
+			incidents = append(incidents, incident)
+		}
 	}
 	return ctx.JSON(200, incidents)
 }
