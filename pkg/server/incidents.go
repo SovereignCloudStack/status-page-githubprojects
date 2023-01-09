@@ -109,7 +109,7 @@ func (s *ServerImplementation) GetIncidents(ctx echo.Context, params api.GetInci
 	incidents := []api.Incident{}
 	for itemKey := range query.Node.ProjectV2.Items.Nodes {
 		incident := query.Node.ProjectV2.Items.Nodes[itemKey].ToIncident(ctx)
-		if helper.IsWithinTimeRange(&incident, params.Start, params.End) {
+		if helper.OverlapsTimeRange(&incident, params.Start, params.End) {
 			incidents = append(incidents, incident)
 		}
 	}

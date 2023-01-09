@@ -6,9 +6,9 @@ import (
 	"github.com/SovereignCloudStack/status-page-openapi/pkg/api"
 )
 
-// IsWithinTimeRange() returns true unless it is definitely outside of
+// OverlapsTimeRange() returns true unless it is definitely outside of
 // the time range.
-func IsWithinTimeRange(incident *api.Incident, start, end time.Time) bool {
+func OverlapsTimeRange(incident *api.Incident, start, end time.Time) bool {
 	if incident.BeganAt != nil {
 		if incident.BeganAt.After(end) {
 			return false

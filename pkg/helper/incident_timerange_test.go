@@ -76,7 +76,7 @@ func TestTimeRange(t *testing.T) {
 	}
 
 	for i, testCase := range testCases {
-		result := IsWithinTimeRange(&testCase.Incident, start, end)
+		result := OverlapsTimeRange(&testCase.Incident, start, end)
 		if result != testCase.ExpectedToBeInRange {
 			t.Errorf(
 				"incident %d: should be in range: %v, is in range: %v",
