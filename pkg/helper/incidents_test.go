@@ -12,6 +12,7 @@ func TestTimeRange(t *testing.T) {
 	end := time.Date(2022, 1, 2, 3, 0, 0, 0, time.UTC)
 
 	timePast1 := time.Date(2018, 2, 2, 3, 0, 0, 0, time.UTC)
+	timePast2 := time.Date(2019, 2, 2, 3, 0, 0, 0, time.UTC)
 	timeWithin1 := time.Date(2020, 2, 2, 3, 0, 0, 0, time.UTC)
 	timeWithin2 := time.Date(2021, 2, 2, 3, 0, 0, 0, time.UTC)
 	timeLater1 := time.Date(2022, 2, 2, 3, 0, 0, 0, time.UTC)
@@ -57,6 +58,13 @@ func TestTimeRange(t *testing.T) {
 				EndedAt: &timeWithin1,
 			},
 			ExpectedToBeInRange: true,
+		},
+		{
+			Incident: api.Incident{ // Begins in the past, ends in the past
+				BeganAt: &timePast1,
+				EndedAt: &timePast2,
+			},
+			ExpectedToBeInRange: false,
 		},
 		{
 			Incident: api.Incident{ // Exactly within range
