@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/SovereignCloudStack/status-page-openapi/pkg/api"
 	"github.com/SovereignCloudStack/status-page-githubprojects/pkg/helper"
+	"github.com/SovereignCloudStack/status-page-openapi/pkg/api"
 	"github.com/labstack/echo/v4"
 	"github.com/shurcooL/githubv4"
 )
@@ -28,18 +28,30 @@ func (i *projectItem) ToIncident(ctx echo.Context) api.Incident {
 		ctx.Logger().Warn(err)
 	}
 	incident := api.Incident{
-		Affects:    []string{},
-		Id:         i.Id,
-		Title:      i.Content.Issue.Title,
-		ImpactType: i.ImpactType.ProjectV2ItemFieldSingleSelectValue.Name,
-		Phase:      i.Phase.ProjectV2ItemFieldSingleSelectValue.Name,
-		BeganAt:    beganAt,
-		EndedAt:    endedAt,
+		Affects:     []string{},
+		Id:          i.Id,
+		Title:       i.Content.Issue.Title,
+		ImpactType:  i.ImpactType.ProjectV2ItemFieldSingleSelectValue.Name,
+		Phase:       i.Phase.ProjectV2ItemFieldSingleSelectValue.Name,
+		BeganAt:     beganAt,
+		EndedAt:     endedAt,
+		Description: i.Content.Issue.Body,
+		Updates:     []api.IncidentUpdate{},
 	}
 	for componentKey := range i.Labels.ProjectV2ItemFieldLabelValue.Labels.Nodes {
 		incident.Affects = append(
 			incident.Affects,
 			i.Labels.ProjectV2ItemFieldLabelValue.Labels.Nodes[componentKey].Id,
+		)
+	}
+	for updateKey := range i.Content.Issue.Comments.Nodes {
+		ghUpdate := i.Content.Issue.Comments.Nodes[updateKey]
+		incident.Updates = append(
+			incident.Updates,
+			api.IncidentUpdate{
+				Text:      ghUpdate.Body,
+				CreatedAt: ghUpdate.PublishedAt.Time,
+			},
 		)
 	}
 	return incident
@@ -49,7 +61,14 @@ type projectItem struct {
 	Id      string
 	Content struct {
 		Issue struct {
-			Title string
+			Title    string
+			Body     string
+			Comments struct {
+				Nodes []struct {
+					Body        string
+					PublishedAt githubv4.DateTime
+				}
+			} `graphql:"comments(first: 10)"`
 		} `graphql:"... on Issue"`
 	}
 	Phase struct {

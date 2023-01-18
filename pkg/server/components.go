@@ -9,10 +9,13 @@ import (
 	"github.com/shurcooL/githubv4"
 )
 
-func (l *projectLabel) ToComponent() api.Component {
+func (l *projectLabel) ToComponent(lastPhase string) api.Component {
 	affectedBy := []api.Id{}
 	for issue := range l.Issues.Nodes {
 		for projectItem := range l.Issues.Nodes[issue].ProjectItems.Nodes {
+			if l.Issues.Nodes[issue].ProjectItems.Nodes[projectItem].FieldValueByName.ProjectV2ItemFieldSingleSelectValue.Name == lastPhase {
+				continue
+			}
 			affectedBy = append(affectedBy, l.Issues.Nodes[issue].ProjectItems.Nodes[projectItem].Id)
 		}
 	}
@@ -32,7 +35,12 @@ type projectLabel struct {
 		Nodes []struct {
 			ProjectItems struct {
 				Nodes []struct {
-					Id string
+					Id               string
+					FieldValueByName struct {
+						ProjectV2ItemFieldSingleSelectValue struct {
+							Name string
+						} `graphql:"... on ProjectV2ItemFieldSingleSelectValue"`
+					} `graphql:"fieldValueByName(name:\"Status\")"`
 				}
 			} `graphql:"projectItems(first:10)"`
 		}
@@ -56,7 +64,7 @@ func (s *ServerImplementation) GetComponent(ctx echo.Context, componentId string
 		ctx.Logger().Error(err)
 		return echo.NewHTTPError(500)
 	}
-	return ctx.JSON(200, query.Node.Label.ToComponent())
+	return ctx.JSON(200, query.Node.Label.ToComponent(s.LastPhase))
 }
 func (s *ServerImplementation) GetComponents(ctx echo.Context) error {
 	var query struct {
@@ -89,7 +97,7 @@ func (s *ServerImplementation) GetComponents(ctx echo.Context) error {
 			if !strings.HasPrefix(query.Node.ProjectV2.Repositories.Nodes[repo].Labels.Nodes[label].Name, "component:") {
 				continue
 			}
-			components = append(components, query.Node.ProjectV2.Repositories.Nodes[repo].Labels.Nodes[label].ToComponent())
+			components = append(components, query.Node.ProjectV2.Repositories.Nodes[repo].Labels.Nodes[label].ToComponent(s.LastPhase))
 		}
 	}
 	return ctx.JSON(200, components)
