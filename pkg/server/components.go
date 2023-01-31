@@ -19,9 +19,14 @@ func (l *projectLabel) ToComponent(lastPhase string) api.Component {
 			affectedBy = append(affectedBy, l.Issues.Nodes[issue].ProjectItems.Nodes[projectItem].Id)
 		}
 	}
+	displayName := strings.TrimPrefix(l.Name, "component:")
+	if l.Description != "" {
+		displayName = l.Description
+	}
+
 	return api.Component{
 		AffectedBy:  affectedBy,
-		DisplayName: strings.TrimPrefix(l.Name, "component:"),
+		DisplayName: displayName,
 		Id:          l.Id,
 		Labels:      map[string]string{}, // TODO
 	}
